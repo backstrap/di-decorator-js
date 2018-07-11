@@ -1,5 +1,5 @@
 'use strict';
 
 var Injectable = require('./decorator').Injectable;
-
-module.exports = { Injectable: Injectable };
+var IoC = require('./container').IoC;
+module.exports = { Injectable, IoC};
