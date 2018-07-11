@@ -8,12 +8,9 @@ import { IoC } from './container';
 
 /**
  * Auto Dependency Injection
- * @param {...class} providers 
+ * @param {...class} obj 
  */
 export function Injectable(obj) {
-
-
-
 
     return (target) => {
 
@@ -33,7 +30,3 @@ export function Injectable(obj) {
         };
     }
 }
-
-Injectable({
-    providers: 1
-})(class A { })
