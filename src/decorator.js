@@ -2,19 +2,29 @@ import { IoC } from './container';
 /**
  *
  * @typedef {Object} class
- * @property {Object[]} providers 
+ * @property {Array} providers 
 
  */
 
 /**
  * Auto Dependency Injection
- * @param {...class[]} providers 
+ * @param {...class} providers 
  */
-export function Injectable(providers) {
+export function Injectable(obj) {
+
+
+
+
     return (target) => {
 
         IoC.registry(target, providers);
-        if (!providers) providers = [];
+
+        if (typeof (obj) !== 'object') return;
+
+        const providers = obj.providers;
+
+        if (!providers) throw new Error('Provider field not found \n Example: @Injectable({privders:[MyProvider]})')
+        if (!Array.isArray(providers)) throw new Error('Providers is not a Dependency Array \n Example: @Injectable({privders:[MyProvider]})')
 
         return class extends target {
             constructor(...args) {
@@ -23,3 +33,7 @@ export function Injectable(providers) {
         };
     }
 }
+
+Injectable({
+    providers: 1
+})(class A { })

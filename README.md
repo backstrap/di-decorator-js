@@ -29,7 +29,7 @@ export class MyProvider {
 ```js
 // file my.component.js
 import { Injectable }  from 'di-decorator-js';
-import { MyProvider } from './my.provider'
+import { MyProvider } from './my.provider';
 
 @Injectable({
     providers:[ MyProvider ] // must be the same order as the class constructor
