@@ -1,7 +1,7 @@
 {
   "name": "di-decorator-js",
   "version": "1.0.0",
-  "description": "Inversion-of-Control dependency injection for Javascript",
+  "description": "Dependency Injection Inversion-of-Control for Javascript",
   "main": "build/index.js",
   "author": "Kevin Perry",
   "license": "Apache 2.0",
@@ -16,10 +16,11 @@
   "keywords": [
     "dependency",
     "injection",
-    "IOC",
-    "inversion",
-    "container",
     "DI",
+    "inversion",
+    "IOC",
+    "container",
+    "Babel",
     "javascript",
     "js"
   ],

@@ -1,4 +1,8 @@
 
+/**
+ * The registry of injectable services.
+ * @extends Map
+ */
 export class Registry extends Map
 {
     constructor() {
