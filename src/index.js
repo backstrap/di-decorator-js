@@ -19,9 +19,9 @@ const container = require('./container').container;
  * class Application { constructor(service1, ...) { ... }, run() { ... } }
  * IoC.resolve(Application).run();
  * @namespace
- * @property {function} injectable
- * @property {function} container
- * @property {object} IoC
+ * @property {Function} injectable
+ * @property {Function} container
+ * @property {Object} IoC
  */
 module.exports = {
     injectable: container.injectable,

@@ -1,8 +1,8 @@
 
-import {container} from 'container';
-import {Registry}  from 'Registry';
+import {container} from '../src/container';
+import {Registry}  from '../src/Registry';
 
-describe('IoC/container', () => {
+describe('container', () => {
     let TestClass1;
 
     beforeEach(() => {
@@ -21,6 +21,7 @@ describe('IoC/container', () => {
         it('returned function returns a constructor that can take services', () => {
             const TestClass2 = class TestClass2a {
                 constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
                     this.a = a;
                 }
             };
@@ -37,7 +38,12 @@ describe('IoC/container', () => {
             expect(container.resolve(TestClass1)).toStrictEqual(new TestClass1());
         });
         it('resolves service classes with constructor args', () => {
-            const TestClass3 = class TestClass3 {constructor(a) {this.a = a;}};
+            const TestClass3 = class TestClass3 {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            };
             const TestClass4 = class TestClass4 {};
 
             container.injectable()(TestClass4);

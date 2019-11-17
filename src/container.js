@@ -5,12 +5,12 @@ const registry = new Registry();
 
 /**
  * @callback injectionCallback
- * @param {function} target
+ * @param {Function} target
  */
 /**
  * @namespace
- * @property {function} injectable
- * @property {function} resolve
+ * @property {Function} injectable
+ * @property {Function} resolve
  */
 export const container = {
     /**
@@ -21,8 +21,8 @@ export const container = {
     injectable: (...services) => (target => registry.register(target, services)),
     /**
      * Inversion-of-control resolver.
-     * @param {function} target
-     * @returns {object}
+     * @param {Function} target
+     * @returns {Object}
      */
     resolve: (target) => registry.resolve(target),
 };

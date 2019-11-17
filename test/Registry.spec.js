@@ -1,7 +1,7 @@
 
-import {Registry} from 'Registry';
+import {Registry} from '../src/Registry';
 
-describe('IoC/Registry', () => {
+describe('Registry', () => {
     let registry;
     let TestClass1;
 
@@ -16,14 +16,26 @@ describe('IoC/Registry', () => {
             expect(TestClass1.isInjectable).toBe(true);
         });
         it('registers service classes with constructor args', () => {
-            const TestClass2 = class {constructor(a, b) {this.a = a; this.b = b;}};
+            const TestClass2 = class {
+                constructor(a, b) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                    // noinspection JSUnusedGlobalSymbols
+                    this.b = b;
+                }
+            };
 
             registry.register(TestClass2, [class {}, class {}]);
             expect(TestClass2.isInjectable).toBe(true);
         });
         it('throws if services array length does not match constructor', () => {
             expect(() => registry.register(class {}, [class {}])).toThrowError();
-            expect(() => registry.register(class {constructor(a) {this.a = a;}}, [])).toThrowError();
+            expect(() => registry.register(class {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            }, [])).toThrowError();
         });
     });
 
@@ -37,7 +49,12 @@ describe('IoC/Registry', () => {
             expect(registry.resolve(TestClass1)).toBe(registry.resolve(TestClass1));
         });
         it('resolves service classes with constructor args', () => {
-            const TestClass3 = class TestClass3 {constructor(a) {this.a = a;}};
+            const TestClass3 = class TestClass3 {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            };
             const TestClass4 = class TestClass4 {};
 
             registry.register(TestClass4, []);

@@ -1,8 +1,8 @@
 
-import {injectable} from 'injectable';
-import {container}  from 'container';
+import {injectable} from '../src/injectable';
+import {container}  from '../src/container';
 
-describe('IoC/injectable', () => {
+describe('injectable', () => {
     it('is the container.injectable() function', () => {
         expect(injectable).toBe(container.injectable);
     });

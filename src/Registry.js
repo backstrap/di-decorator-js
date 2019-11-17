@@ -12,8 +12,8 @@ export class Registry extends Map
 
     /**
      * Register dependencies
-     * @param {function} target
-     * @param {boolean} target.isInjectable
+     * @param {Function} target
+     * @param {boolean} [target.isInjectable]
      * @param {function[]} services
      */
     register(target, services) {
@@ -27,9 +27,9 @@ export class Registry extends Map
 
     /**
      * Resolve dependencies
-     * @param {function} target
-     * @param {boolean} target.isInjectable
-     * @returns {object}
+     * @param {Function} target
+     * @param {boolean} [target.isInjectable]
+     * @returns {Object}
      */
     resolve(target) {
         if (!target.isInjectable) {

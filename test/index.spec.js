@@ -1,8 +1,8 @@
 
-import {IoC}        from 'index';
-import {injectable} from 'index';
-import {resolve}    from 'index';
-import {container}  from 'container';
+import {IoC}        from '../src/index';
+import {injectable} from '../src/index';
+import {resolve}    from '../src/index';
+import {container}  from '../src/container';
 
 describe('IoC', () => {
     it('exposes the container.injectable() function', () => {
