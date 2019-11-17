@@ -1,5 +1,6 @@
 # Javascript - Dependency Injection Decorator
-Simple Dependency Injection Decorator for javascript
+A dead simple inversion-of-control dependency injection system for javascript
+using Babel decorators.
 
 **Required:** [babel-plugin-transform-decorators-legacy](http://babeljs.io/docs/en/babel-plugin-transform-decorators) in your project...
 

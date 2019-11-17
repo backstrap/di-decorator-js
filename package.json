@@ -1,37 +1,96 @@
 {
   "name": "di-decorator-js",
-  "version": "1.0.3",
-  "description": " Dependency injection - Javascript",
-  "main": "lib/index.js",
-  "scripts": {
-    "prepublish": "rimraf lib/* && babel src --out-dir lib"
+  "version": "1.0.0",
+  "description": "Inversion-of-Control dependency injection for Javascript",
+  "main": "build/index.js",
+  "author": "Kevin Perry",
+  "license": "Apache 2.0",
+  "homepage": "https://github.com/backstrap/di-decorator-js#readme",
+  "bugs": {
+    "url": "https://github.com/backstrap/di-decorator-js/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VagnerSilva/di-decorator-js.git"
+    "url": "git+https://github.com/backstrap/di-decorator-js.git"
   },
   "keywords": [
-    "Dependency",
+    "dependency",
     "injection",
-    "Javascript",
-    "js",
-    "Ioc",
-    "Container",
-    "di",
-    "vanilla"
+    "IOC",
+    "inversion",
+    "container",
+    "DI",
+    "javascript",
+    "js"
   ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-3": "^6.24.1",
-    "rimraf": "^2.6.2"
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.7.2",
+    "@babel/node": "^7.7.0",
+    "@babel/plugin-proposal-decorators": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "jest-cli": "^24.9.0",
+    "jsdoc": "^3.6.3",
+    "rimraf": "^3.0.0",
+    "source-map-support": "^0.5.16"
   },
-  "author": "Vagner Silva",
-  "license": "Apache 2.0",
-  "bugs": {
-    "url": "https://github.com/VagnerSilva/di-decorator-js/issues"
+  "scripts": {
+    "build": "rimraf build/* && babel src --out-dir build --source-maps",
+    "test": "rimraf coverage/* && jest",
+    "doc": "rimraf docs/* && jsdoc -c jsdoc.json",
+    "clean": "rimraf build/* coverage/* docs/*"
   },
-  "homepage": "https://github.com/VagnerSilva/di-decorator-js#readme"
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      [
+        "module-resolver",
+        {
+          "root": [
+            "./src"
+          ]
+        }
+      ],
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          "legacy": true
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "automock": false,
+    "clearMocks": false,
+    "resetMocks": false,
+    "restoreMocks": false,
+    "verbose": false,
+    "collectCoverage": true,
+    "testEnvironment": "node",
+    "coverageDirectory": "<rootDir>/coverage",
+    "coverageReporters": [
+      "text",
+      "json"
+    ],
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testMatch": [
+      "<rootDir>/test/**/*.spec.js"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/.git/",
+      "<rootDir>/build/",
+      "<rootDir>/coverage/",
+      "<rootDir>/docs/"
+    ]
+  }
 }
