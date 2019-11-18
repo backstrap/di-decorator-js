@@ -23,7 +23,7 @@ This package encourages adherence to good programming practices by...
     so you're not tempted to mis-use the container for other things.
   - Requiring all injectable service classes be declared as such.
   - Using a declarative style through the use of class decorators.
-  - Supporting a fully-realized Service + Entity application model
+  - Supporting a fully-realized Service / Entity (Injectable / Newable) application model
     where the services are stateless service providers which depend only on other services
     (through injection),
     and all state is held in entity objects created by the services as needed.
@@ -38,9 +38,28 @@ to improve the API and streamline the codebase.
 I kept the fundamental ideas, but overhauled the implementation.
 
 
+### Philosophy
+
+Why use effortless-di?  Well, if you're using one of the popular frameworks like Angular or React,
+you don't need effortless-di - you'll just use the tools that come with your framework.
+But if you're writing an application without one of those, using something like effortless-di
+to help you organize your code architecture is a really good practice.
+I use it for writing small CLI's and back-end service mesh components in NodeJs.
+I design my code using a Service / Entity architecture based on the principles outlined
+[in this post by Miško Hevery](http://misko.hevery.com/2008/09/30/to-new-or-not-to-new/)
+and further elaborated in
+[this Loose Couplings post](https://www.loosecouplings.com/2011/01/how-to-write-testable-code-overview.html).
+Defining the dependency tree of Service Objects with effortless-di is quick, easy and painless.
+
+While we're on the subject of architecture, I also encourage strongly incremental architecture -
+design and develop incrementally, don't write any piece of code until you need it.
+And I use a "test-centric" continuous integration development cycle with 100% unit test coverage.
+Using effortless-di allows me to easily set up mocks in my test suites.
+
 ### Requirements
 
-The Babel Decorators Plugin: [@babel/plugin-proposal-decorators](https://babeljs.io/docs/en/babel-plugin-proposal-decorators)
+The Babel Decorators Plugin:
+[@babel/plugin-proposal-decorators](https://babeljs.io/docs/en/babel-plugin-proposal-decorators)
 
 (For older versions of Babel, babel-plugin-transform-decorators-legacy should work fine.)
 
@@ -52,15 +71,15 @@ If you don't already have it, you'll need to install the Babel decorators plugin
 
 ...and add this to your .babelrc:
  
- ```
+```
   { "plugins": ["@babel/plugin-proposal-decorators"] }
 ```
 
 ### Installation
 
-`npm install -D effortless-di`
+`npm install effortless-di`
 
-### Example
+### Usage
 
 ```js
 // file: MyService.js
@@ -76,13 +95,15 @@ export class MyService {
 
 ```js
 // file MyApplication.js
-import {injectable} from 'effortless-di';
-import {MyService}  from './MyService';
+import {injectable}     from 'effortless-di';
+import {MyService}      from './MyService';
+import {MyOtherService} from './MyOtherService';
 
-@injectable(MyService/*, ... */)
+@injectable(MyService, MyOtherService)
 class MyApplication {
-    constructor(myService) {
+    constructor(myService, myOtherService) {
         this.myService = myService;
+        this.myOtherService = myOtherService;
     }
     run() {
         console.log(this.myService.result());
@@ -101,7 +122,7 @@ resolve(MyApplication).run();
 
 ### Alternate Example
 
-**If you prefer namespaced names, you can do it this way:**
+If you prefer namespaced names, you can do it this way:
 ```js
 // file: MyService.js
 import {DI} from 'effortless-di';
@@ -116,13 +137,15 @@ export class MyService {
 
 ```js
 // file MyApplication.js
-import {DI}         from 'effortless-di';
-import {MyService}  from './MyService';
+import {DI}             from 'effortless-di';
+import {MyService}      from './MyService';
+import {MyOtherService} from './MyOtherService';
 
-@DI.injectable(MyService/*, ... */)
+@DI.injectable(MyService, MyOtherService)
 class MyApplication {
-    constructor(myService) {
+    constructor(myService, myOtherService) {
         this.myService = myService;
+        this.myOtherService = myOtherService;
     }
     run() {
         console.log(this.myService.result());

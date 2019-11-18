@@ -1,6 +1,6 @@
 {
   "name": "effortless-di",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Effortless Dependency Injection for Javascript",
   "main": "build/index.js",
   "author": "Kevin Perry",
