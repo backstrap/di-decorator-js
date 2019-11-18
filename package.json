@@ -1,22 +1,26 @@
 {
-  "name": "di-decorator-js",
+  "name": "effortless-di",
   "version": "1.0.0",
-  "description": "Dependency Injection Inversion-of-Control for Javascript",
+  "description": "Effortless Dependency Injection for Javascript",
   "main": "build/index.js",
   "author": "Kevin Perry",
   "license": "Apache 2.0",
-  "homepage": "https://github.com/backstrap/di-decorator-js#readme",
+  "homepage": "https://github.com/backstrap/effortless-di#readme",
   "bugs": {
-    "url": "https://github.com/backstrap/di-decorator-js/issues"
+    "url": "https://github.com/backstrap/effortless-di/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/backstrap/di-decorator-js.git"
+    "url": "git+https://github.com/backstrap/effortless-di.git"
   },
   "keywords": [
+    "DI",
+    "easy",
+    "simple",
+    "effortless",
+    "decorator",
     "dependency",
     "injection",
-    "DI",
     "inversion",
     "IOC",
     "container",
