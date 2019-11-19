@@ -1,12 +1,30 @@
 # Effortless Dependency Injection for Javascript
 
-### Introduction
-####
-A dead-simple Dependency Injection container for javascript,
-using Babel 7 decorators.
-(Should also work on older versions of Babel.)
+### ***-- New!! --***
 
-This package provides a very simple, performant decorator-based DI/IoC solution
+### Constructor-less Dependency Injection!
+
+Now you can extend your service classes from the AutoInject class
+and skip defining the constructors!
+The AutoInject constructor assumes that any passed constructor args are (injectable) objects,
+and attaches them all as properties of the object being created.
+Each property is automatically named based on the classname of the object being attached.
+This gives you a standard naming convention for accessing the injected services,
+and a cleaner implementation,
+since you don't have to write a boilerplate constructor to handle them.
+If you don't want this behavior,
+then simply declare your class as usual without extending from AutoInject.
+But why would you want to do that?!
+
+
+### Introduction
+
+Effortless-DI is a dead-simple Dependency Injection container for javascript,
+using Babel 7 decorators.
+(It should also work on older versions of Babel with the legacy decorator plugin,
+if that's what you're using.)
+
+This package provides a very simple, efficient, decorator-based DI/IoC solution
 for doing constructor injection.
 You simply declare each of your service classes to be "injectable"
 using the class decorator function `@injectable()`.
@@ -95,6 +113,81 @@ export class MyService {
 
 ```js
 // file MyApplication.js
+import {injectable, AutoInject} from 'effortless-di';
+import {MyService}              from './MyService';
+import {MyOtherService}         from './MyOtherService';
+
+@injectable(MyService, MyOtherService)
+class MyApplication extends AutoInject {
+    run() {
+        console.log(this.myService.result());
+    }
+}
+```
+
+```js
+// file index.js
+import {resolve}       from 'effortless-di';
+import {MyApplication} from './MyApplication';
+
+// prints 'Eureka!'
+resolve(MyApplication).run();
+```
+
+### Alternate Example - Using The DI Namespace
+
+If you prefer namespaced names, you can do it this way:
+```js
+// file: MyService.js
+import {DI} from 'effortless-di';
+
+@DI.injectable()
+export class MyService {
+    result() {
+        return 'Eureka!';
+    }
+}
+```
+
+```js
+// file MyApplication.js
+import {DI}             from 'effortless-di';
+import {MyService}      from './MyService';
+import {MyOtherService} from './MyOtherService';
+
+@DI.injectable(MyService, MyOtherService)
+class MyApplication extends DI.AutoInject {
+    run() {
+        console.log(this.myService.result());
+    }
+}
+```
+
+```js
+// file index.js
+import {DI}            from 'effortless-di';
+import {MyApplication} from './MyApplication';
+
+// prints 'Eureka!'
+DI.resolve(MyApplication).run();
+```
+
+### Alternate Example - Explicit Constructor
+
+```js
+// file: MyService.js
+import {injectable} from 'effortless-di';
+
+@injectable()
+export class MyService {
+    result() {
+        return 'Eureka!';
+    }
+}
+```
+
+```js
+// file MyApplication.js
 import {injectable}     from 'effortless-di';
 import {MyService}      from './MyService';
 import {MyOtherService} from './MyOtherService';
@@ -118,46 +211,4 @@ import {MyApplication} from './MyApplication';
 
 // prints 'Eureka!'
 resolve(MyApplication).run();
-```
-
-### Alternate Example
-
-If you prefer namespaced names, you can do it this way:
-```js
-// file: MyService.js
-import {DI} from 'effortless-di';
-
-@DI.injectable()
-export class MyService {
-    result() {
-        return 'Eureka!';
-    }
-}
-```
-
-```js
-// file MyApplication.js
-import {DI}             from 'effortless-di';
-import {MyService}      from './MyService';
-import {MyOtherService} from './MyOtherService';
-
-@DI.injectable(MyService, MyOtherService)
-class MyApplication {
-    constructor(myService, myOtherService) {
-        this.myService = myService;
-        this.myOtherService = myOtherService;
-    }
-    run() {
-        console.log(this.myService.result());
-    }
-}
-```
-
-```js
-// file index.js
-import {DI}            from 'effortless-di';
-import {MyApplication} from './MyApplication';
-
-// prints 'Eureka!'
-DI.resolve(MyApplication).run();
 ```

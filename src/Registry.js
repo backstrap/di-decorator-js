@@ -18,8 +18,17 @@ export class Registry extends Map
      */
     register(target, services) {
         // We must allow for injecting into an inherited constructor - target.length will be 0.
-        if (target.length > 0 && target.length !== services.length) {
+        if (target.length > 0 && services.length !== target.length) {
             throw new Error(`Dependency count for ${target.name} should be ${target.length}`);
+        } else if (target.length === 0) {
+            const superName = Object.getPrototypeOf(target.prototype).constructor.name;
+            const inherited = this.get(superName) || [];
+
+            if (services.length > inherited.length) {
+                throw new Error(`Dependency count for ${target.name} should be ${inherited.length}`);
+            } else {
+                services = services.concat(inherited.slice(services.length));
+            }
         }
 
         this.set(target.name, services);

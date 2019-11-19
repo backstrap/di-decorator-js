@@ -4,6 +4,7 @@ import {DI}         from '../src/index';
 import {injectable} from '../src/index';
 import {resolve}    from '../src/index';
 import {container}  from '../src/container';
+import {AutoInject} from '../src/AutoInject';
 
 describe('effortless-di', () => {
     it('exposes the container.injectable() function', () => {
@@ -15,10 +16,11 @@ describe('effortless-di', () => {
     it('exposes the container itself as "DI"', () => {
         expect(DI).toBe(container);
     });
-    it('only exposes injectable, resolve, and DI', () => {
+    it('only exposes injectable, resolve, AutoInject, and DI', () => {
         expect(defaultObj).toStrictEqual({
             injectable: injectable,
             resolve: resolve,
+            AutoInject: AutoInject,
             DI: DI,
         })
     });

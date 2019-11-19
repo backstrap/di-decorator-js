@@ -7,7 +7,7 @@ describe('Registry', () => {
 
     beforeEach(() => {
         registry = new Registry();
-        TestClass1 = class TestClass {};
+        TestClass1 = class TestClass { };
     });
 
     describe('register method', () => {
@@ -25,7 +25,7 @@ describe('Registry', () => {
                 }
             };
 
-            registry.register(TestClass2, [class {}, class {}]);
+            registry.register(TestClass2, [class { }, class { }]);
             expect(TestClass2.isInjectable).toBe(true);
         });
         it('throws if services array length does not match constructor', () => {
@@ -36,13 +36,16 @@ describe('Registry', () => {
                 }
             };
 
-            expect(() => registry.register(TestClass2, [class {}, class{}])).toThrowError();
+            expect(() => registry.register(TestClass2, [class { }, class{ }])).toThrowError();
             expect(() => registry.register(TestClass2, [])).toThrowError();
         });
         it('works with inherited constructor', () => {
-            const TestClass2 = class TestClass2 { constructor(a) {
-                this.a = a;
-            }};
+            const TestClass2 = class TestClass2 {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            };
             const TestClass3 = class TestClass3 extends TestClass2 { };
 
             registry.register(TestClass1, []);
@@ -50,6 +53,18 @@ describe('Registry', () => {
             registry.register(TestClass3, [TestClass1]);
 
             expect(registry.resolve(TestClass3).a).toBeTruthy();
+        });
+        it('throws if services array length too long for inherited constructor', () => {
+            const TestClass2 = class {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            };
+            const TestClass3 = class TestClass3 extends TestClass2 { };
+
+            registry.register(TestClass2, [class { }]);
+            expect(() => registry.register(TestClass3, [class { }, class { }])).toThrowError();
         });
     });
 
@@ -69,7 +84,7 @@ describe('Registry', () => {
                     this.a = a;
                 }
             };
-            const TestClass4 = class TestClass4 {};
+            const TestClass4 = class TestClass4 { };
 
             registry.register(TestClass4, []);
             registry.register(TestClass3, [TestClass4]);

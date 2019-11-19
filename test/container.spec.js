@@ -1,12 +1,13 @@
 
-import {container} from '../src/container';
-import {Registry}  from '../src/Registry';
+import {container}  from '../src/container';
+import {AutoInject} from '../src/AutoInject';
+import {Registry}   from '../src/Registry';
 
 describe('container', () => {
     let TestClass1;
 
     beforeEach(() => {
-        TestClass1 = class TestClass {};
+        TestClass1 = class TestClass { };
         spyOn(Registry.prototype, 'register').and.callThrough();
     });
 
@@ -44,7 +45,7 @@ describe('container', () => {
                     this.a = a;
                 }
             };
-            const TestClass4 = class TestClass4 {};
+            const TestClass4 = class TestClass4 { };
 
             container.injectable()(TestClass4);
             container.injectable(TestClass4)(TestClass3);
@@ -52,6 +53,12 @@ describe('container', () => {
         });
         it('throws if class is not injectable', () => {
             expect(() => container.resolve(TestClass1)).toThrowError();
+        });
+    });
+
+    describe('AutoInject class', () => {
+        it('is the AutoInject class', () => {
+            expect(container.AutoInject).toBe(AutoInject);
         });
     });
 });
