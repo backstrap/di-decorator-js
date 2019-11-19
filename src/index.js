@@ -19,9 +19,9 @@ const container = require('./container').container;
  * class Application { constructor(service1, ...) { ... }, run() { ... } }
  * DI.resolve(Application).run();
  * @namespace
- * @property {Function} injectable
- * @property {Function} container
- * @property {Object}   DI
+ * @property {Function} injectable - The dependency injection decorator function.
+ * @property {Function} resolve - The service class resolver function.
+ * @property {Object}   DI - A DI namespace containing the injectable() and resolve() functions.
  */
 module.exports = {
     injectable: container.injectable,

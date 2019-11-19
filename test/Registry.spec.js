@@ -29,13 +29,27 @@ describe('Registry', () => {
             expect(TestClass2.isInjectable).toBe(true);
         });
         it('throws if services array length does not match constructor', () => {
-            expect(() => registry.register(class {}, [class {}])).toThrowError();
-            expect(() => registry.register(class {
+            const TestClass2 = class {
                 constructor(a) {
                     // noinspection JSUnusedGlobalSymbols
                     this.a = a;
                 }
-            }, [])).toThrowError();
+            };
+
+            expect(() => registry.register(TestClass2, [class {}, class{}])).toThrowError();
+            expect(() => registry.register(TestClass2, [])).toThrowError();
+        });
+        it('works with inherited constructor', () => {
+            const TestClass2 = class TestClass2 { constructor(a) {
+                this.a = a;
+            }};
+            const TestClass3 = class TestClass3 extends TestClass2 { };
+
+            registry.register(TestClass1, []);
+            registry.register(TestClass2, [TestClass1]);
+            registry.register(TestClass3, [TestClass1]);
+
+            expect(registry.resolve(TestClass3).a).toBeTruthy();
         });
     });
 

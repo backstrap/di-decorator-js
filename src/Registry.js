@@ -12,12 +12,13 @@ export class Registry extends Map
 
     /**
      * Register dependencies
-     * @param {Function} target
-     * @param {boolean} [target.isInjectable]
-     * @param {function[]} services
+     * @param {Function} target - The injectable class to be registered.
+     * @param {boolean} [target.isInjectable] - True if the target has been registered.
+     * @param {function[]} services - The injectable classes the target depends on.
      */
     register(target, services) {
-        if (target.length !== services.length) {
+        // We must allow for injecting into an inherited constructor - target.length will be 0.
+        if (target.length > 0 && target.length !== services.length) {
             throw new Error(`Dependency count for ${target.name} should be ${target.length}`);
         }
 
@@ -27,9 +28,9 @@ export class Registry extends Map
 
     /**
      * Resolve dependencies
-     * @param {Function} target
-     * @param {boolean} [target.isInjectable]
-     * @returns {Object}
+     * @param {Function} target - The class of the service to be resolved.
+     * @param {boolean} [target.isInjectable] - True if the target has been registered.
+     * @returns {Object} - An instance of the target class.
      */
     resolve(target) {
         if (!target.isInjectable) {
