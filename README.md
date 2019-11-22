@@ -9,12 +9,6 @@ and skip defining the constructors!
 An @autoinjectable service automatically gets a constructor which
 assumes that any passed constructor args are (injectable) objects,
 and attaches them all as properties of the object being created.
-Each property is automatically named based on the classname of the object being attached.
-This gives you a standard naming convention for accessing the injected services,
-and a cleaner implementation,
-since you don't have to write a boilerplate constructor to handle them.
-If you don't want this behavior,
-then simply declare your class as usual, using the "@injectable()" decorator.
 
 
 ### Introduction
@@ -24,17 +18,36 @@ using Babel 7 decorators.
 (It should also work on older versions of Babel with the legacy decorator plugin,
 if that's what you're using.)
 
-This package provides a very simple, efficient, decorator-based DI/IoC solution
+This package provides a very clean, efficient, decorator-based DI/IoC solution
 for doing constructor injection.
 You simply declare each of your service classes to be "injectable"
-using the class decorator functions `@injectable()` and  `@autoinjectable()`.
+using one of the class decorator functions `@injectable()` or  `@autoinjectable()`.
 If the service has any dependencies, you list those service classes
 as arguments to the decorator
-(in the same order as they appear in the constructor, if using `@injectable`).
-Then you can start up your application by using the `resolve()` function
+(in the same order as they would appear in the constructor.)
+Then you can run your application by using the `resolve()` function
 to get an instance of your top-level service ("application") class
 on which to make the initial method call.
-A complete example is given below.
+A complete example is given [below](#Usage).
+
+An `@autoinjectable` service automatically gets a constructor which
+assumes that any passed constructor args are (injectable) objects,
+and attaches them all as properties of the object being created.
+Each property is automatically named based on the classname of the object being attached.
+(The property name is the camel-case version of the classname -
+so an instance of MyClass will be named this.myClass,
+and an instance of ABCClass will be named this.abcClass.)
+This gives you a standard naming convention for accessing the injected services,
+and a cleaner implementation,
+since you don't have to write a boilerplate constructor to handle them.
+If you don't want this behavior,
+then simply declare your class as usual, using the `@injectable()` decorator.
+You can include a constructor definition for an `@autoinjectable` class
+if you have other initialization to do,
+and it will get run as well.
+(It gets run after any superclass constructors,
+but *before* the `@autoinjectable` constructor for this class,
+so don't expect all your injector properties to be set yet.)
 
 This package encourages adherence to good programming practices by...
 

@@ -1,6 +1,6 @@
 {
   "name": "effortless-di",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Effortless Dependency Injection for Javascript",
   "main": "build/index.js",
   "author": "Kevin Perry",
@@ -46,7 +46,8 @@
     "build": "rimraf build/* && babel src --out-dir build --source-maps",
     "test": "rimraf coverage/* && jest",
     "doc": "rimraf docs/* && jsdoc -c jsdoc.json",
-    "clean": "rimraf build/* coverage/* docs/*"
+    "clean": "rimraf build/* coverage/* docs/*",
+    "make": "npm install && rimraf build/* docs/* && babel src --out-dir build --source-maps && jsdoc -c jsdoc.json"
   },
   "babel": {
     "presets": [

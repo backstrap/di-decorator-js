@@ -69,12 +69,15 @@ export class Registry extends Map
         this.register(target, services);
 
         const names = this.get(target.name).names;
-        return class autoInjected extends target {
+        const autoInjected = class extends target {
             constructor(...args) {
                 super(...args);
                 names.forEach((name, index) => this[name] = args[index]);
             }
         };
+        Object.defineProperty(autoInjected, 'name', {value: target.name});
+
+        return autoInjected;
     }
 
     /**
@@ -94,7 +97,7 @@ export class Registry extends Map
     }
 
     /**
-     * Makes a suitable property name for a service class.
+     * Makes a camelCase property name for a service class.
      * @protected
      * @param {Function} service - The class of the service.
      * @return {string} - The name to use for properties holding an instance of this service.
