@@ -1,10 +1,10 @@
 
-import defaultObj   from '../src/index';
-import {DI}         from '../src/index';
-import {injectable} from '../src/index';
-import {resolve}    from '../src/index';
-import {container}  from '../src/container';
-import {AutoInject} from '../src/AutoInject';
+import defaultObj       from '../src/index';
+import {DI}             from '../src/index';
+import {injectable}     from '../src/index';
+import {autoinjectable} from '../src/index';
+import {resolve}        from '../src/index';
+import {container}      from '../src/container';
 
 describe('effortless-di', () => {
     it('exposes the container.injectable() function', () => {
@@ -20,7 +20,7 @@ describe('effortless-di', () => {
         expect(defaultObj).toStrictEqual({
             injectable: injectable,
             resolve: resolve,
-            AutoInject: AutoInject,
+            autoinjectable: autoinjectable,
             DI: DI,
         })
     });

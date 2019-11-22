@@ -1,6 +1,6 @@
 'use strict';
 
-const container = require('./container').container;
+import {container} from './container';
 
 /**
  * A simple dependency injection module.
@@ -23,13 +23,13 @@ const container = require('./container').container;
  * DI.resolve(Application).run();
  * @namespace
  * @property {Function} injectable - The dependency injection decorator function.
+ * @property {Function} autoinjectable - A base class for managing "constructor-less" injection.
  * @property {Function} resolve - The service class resolver function.
- * @property {Object}   AutoInject - A base class for managing "constructor-less" injection.
  * @property {Object}   DI - A DI namespace containing the injectable() and resolve() functions and the AutoInject class.
  */
 module.exports = {
     injectable: container.injectable,
+    autoinjectable: container.autoinjectable,
     resolve: container.resolve,
-    AutoInject: container.AutoInject,
     DI: container
 };

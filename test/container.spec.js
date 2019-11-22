@@ -1,7 +1,6 @@
 
-import {container}  from '../src/container';
-import {AutoInject} from '../src/AutoInject';
-import {Registry}   from '../src/Registry';
+import {container}      from '../src/container';
+import {Registry}       from '../src/Registry';
 
 describe('container', () => {
     let TestClass1;
@@ -13,7 +12,7 @@ describe('container', () => {
 
     describe('injectable method', () => {
         it('returns a function', () => {
-            expect(container.injectable()).toStrictEqual(jasmine.any(Function));
+            expect(typeof container.injectable()).toBe('function');
         });
         it('returned function can register a no-args constructor', () => {
             container.injectable()(TestClass1);
@@ -30,6 +29,40 @@ describe('container', () => {
             TestClass1.isInjectable = TestClass2.isInjectable = true;
             container.injectable(TestClass1)(TestClass2);
             expect(Registry.prototype.register).toHaveBeenCalledWith(TestClass2, [TestClass1]);
+        });
+    });
+
+    describe('autoinjectable function', () => {
+        it('returns a function', () => {
+            expect(typeof container.autoinjectable()).toBe('function');
+        });
+        it('returned function can register a no-args constructor', () => {
+            container.autoinjectable()(TestClass1);
+            expect(Registry.prototype.register).toHaveBeenCalledWith(TestClass1, []);
+        });
+        it('returned function returns a constructor that can take services', () => {
+            const TestClass2 = class TestClass2a {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            };
+
+            TestClass1.isInjectable = TestClass2.isInjectable = true;
+            container.autoinjectable(TestClass1)(TestClass2);
+            expect(Registry.prototype.register).toHaveBeenCalledWith(TestClass2, [TestClass1]);
+        });
+        it('returned function returns a constructor that returns a constructor', () => {
+            const TestClass2 = class TestClass2a {
+                constructor(a) {
+                    // noinspection JSUnusedGlobalSymbols
+                    this.a = a;
+                }
+            };
+
+            TestClass1.isInjectable = TestClass2.isInjectable = true;
+            const result = container.autoinjectable(TestClass1)(TestClass2);
+            expect(typeof result).toBe('function');
         });
     });
 
@@ -53,12 +86,6 @@ describe('container', () => {
         });
         it('throws if class is not injectable', () => {
             expect(() => container.resolve(TestClass1)).toThrowError();
-        });
-    });
-
-    describe('AutoInject class', () => {
-        it('is the AutoInject class', () => {
-            expect(container.AutoInject).toBe(AutoInject);
         });
     });
 });

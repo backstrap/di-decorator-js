@@ -27,17 +27,14 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>
+const leadingCapsExpr = /^\p{Lu}+/u;
+
 /**
  * The registry of injectable services.
  * @extends Map
  */
 export class Registry extends Map
 {
-    constructor() {
-        super();
-        this.cache = new Map();
-    }
-
     /**
      * Register dependencies
      * @param {Function} target - The injectable class to be registered.
@@ -50,17 +47,62 @@ export class Registry extends Map
             throw new Error(`Dependency count for ${target.name} should be ${target.length}`);
         } else if (target.length === 0) {
             const superName = Object.getPrototypeOf(target.prototype).constructor.name;
-            const inherited = this.get(superName) || [];
+            const inherited = (this.get(superName) &amp;&amp; this.get(superName).services) || [];
 
-            if (services.length > inherited.length) {
-                throw new Error(`Dependency count for ${target.name} should be ${inherited.length}`);
+            // We must inject at least the dependencies that our superclass is expecting.
+            if (services.length &lt; inherited.length) {
+                throw new Error(`Dependency count for ${target.name} should be at least ${inherited.length}`);
             } else {
+                services.forEach((service, index) => {
+                    if (inherited[index] &amp;&amp; service !== inherited[index] &amp;&amp; !(service.prototype instanceof inherited[index])) {
+                        throw new Error(`Dependency mis-match for ${target.name} at ${service.name}`)
+                    }
+                });
                 services = services.concat(inherited.slice(services.length));
             }
         }
 
-        this.set(target.name, services);
+        /*
+         * We must ensure that we are not re-using a name that a superclass of ours is using.
+         * For example if B extends A, and D extends C,
+         * and we declare D to be @autoinjectable(A)
+         * then it is illegal to declare C to be @autoinjectable(B, A),
+         * because this.a will have conflicting meanings -
+         * methods of D will expect this.a to be the instance of B (which is legal),
+         * but methods of C will expect this.a to be an independent plain A instance, not B.
+         */
+        const names = services.map(service => this.makeName(service));
+        let parent = Object.getPrototypeOf(target.prototype).constructor;
+        let entry = this.get(parent.name);
+
+        while (entry &amp;&amp; entry.names.length) {
+            if (names.some(
+                (name, index) => entry.names.some((comp, compIndex) => (comp === name &amp;&amp; compIndex !== index))
+            )) {
+                throw new Error(`injection conflict! Re-use of "${parent.name}" injection in "${target.name}"`);
+            }
+
+            parent = Object.getPrototypeOf(parent.prototype);
+            entry = this.get(parent.name);
+        }
+
+        this.set(target.name, {
+            services: services,
+            names: names,
+        });
         target.isInjectable = true;
+    }
+
+    autoInject(target, services) {
+        this.register(target, services);
+
+        const names = this.get(target.name).names;
+        return class autoInjected extends target {
+            constructor(...args) {
+                super(...args);
+                names.forEach((name, index) => this[name] = args[index]);
+            }
+        };
     }
 
     /**
@@ -70,14 +112,30 @@ export class Registry extends Map
      * @returns {Object} - An instance of the target class.
      */
     resolve(target) {
+        const data = this.get(target.name);
+
         if (!target.isInjectable) {
             throw new Error(`Target is not injectable for ${target.name}`);
         }
 
-        return this.cache.get(target.name) || this.cache.set(
-            target.name,
-            new target(...(this.get(target.name)).map(service => this.resolve(service)))
-        ).get(target.name);
+        return data.instance || (data.instance = new target(...(data.services).map(service => this.resolve(service))));
+    }
+
+    /**
+     * Makes a suitable property name for a service class.
+     * @protected
+     * @param {Function} service - The class of the service.
+     * @return {string} - The name to use for properties holding an instance of this service.
+     */
+    makeName(service) {
+        const name = service.name;
+        const modCount = (leadingCapsExpr.exec(name)[0].length - 1) || 1;
+
+        return (
+            modCount === name.length - 1
+            ? name.toLowerCase()
+            : name.substring(0, modCount).toLowerCase() + name.substring(modCount)
+        );
     }
 }
 </code></pre>
@@ -90,13 +148,13 @@ export class Registry extends Map
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="container.html">container</a></li><li><a href="module.exports.html">exports</a></li></ul><h3>Classes</h3><ul><li><a href="AutoInject.html">AutoInject</a></li><li><a href="Registry.html">Registry</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="container.html">container</a></li><li><a href="module.exports.html">exports</a></li></ul><h3>Classes</h3><ul><li><a href="Registry.html">Registry</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Nov 19 2019 21:48:02 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Thu Nov 21 2019 20:55:28 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

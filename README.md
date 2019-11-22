@@ -1,20 +1,20 @@
 # Effortless Dependency Injection for Javascript
 
-### ***-- New!! --***
+### ***-- New! --***
 
-### Constructor-less Dependency Injection!
+### Now with Constructor-less Dependency Injection!
 
-Now you can extend your service classes from the AutoInject class
+Now you can declare your service classes as "@autoinjectable()"
 and skip defining the constructors!
-The AutoInject constructor assumes that any passed constructor args are (injectable) objects,
+An @autoinjectable service automatically gets a constructor which
+assumes that any passed constructor args are (injectable) objects,
 and attaches them all as properties of the object being created.
 Each property is automatically named based on the classname of the object being attached.
 This gives you a standard naming convention for accessing the injected services,
 and a cleaner implementation,
 since you don't have to write a boilerplate constructor to handle them.
 If you don't want this behavior,
-then simply declare your class as usual without extending from AutoInject.
-But why would you want to do that?!
+then simply declare your class as usual, using the "@injectable()" decorator.
 
 
 ### Introduction
@@ -27,9 +27,10 @@ if that's what you're using.)
 This package provides a very simple, efficient, decorator-based DI/IoC solution
 for doing constructor injection.
 You simply declare each of your service classes to be "injectable"
-using the class decorator function `@injectable()`.
-If the service has any dependencies, you list those service classes as arguments to `@injectable()`
-in the same order as they appear in the constructor.
+using the class decorator functions `@injectable()` and  `@autoinjectable()`.
+If the service has any dependencies, you list those service classes
+as arguments to the decorator
+(in the same order as they appear in the constructor, if using `@injectable`).
 Then you can start up your application by using the `resolve()` function
 to get an instance of your top-level service ("application") class
 on which to make the initial method call.
@@ -37,7 +38,7 @@ A complete example is given below.
 
 This package encourages adherence to good programming practices by...
 
-  - Only exposing the `injectable()` and `resolve()` functions,
+  - Only exposing the `injectable()`, `autoinjectable()` and `resolve()` functions,
     so you're not tempted to mis-use the container for other things.
   - Requiring all injectable service classes be declared as such.
   - Using a declarative style through the use of class decorators.
@@ -113,12 +114,12 @@ export class MyService {
 
 ```js
 // file MyApplication.js
-import {injectable, AutoInject} from 'effortless-di';
-import {MyService}              from './MyService';
-import {MyOtherService}         from './MyOtherService';
+import {autoinjectable} from 'effortless-di';
+import {MyService}      from './MyService';
+import {MyOtherService} from './MyOtherService';
 
-@injectable(MyService, MyOtherService)
-class MyApplication extends AutoInject {
+@autoinjectable(MyService, MyOtherService)
+class MyApplication {
     run() {
         console.log(this.myService.result());
     }
@@ -155,8 +156,8 @@ import {DI}             from 'effortless-di';
 import {MyService}      from './MyService';
 import {MyOtherService} from './MyOtherService';
 
-@DI.injectable(MyService, MyOtherService)
-class MyApplication extends DI.AutoInject {
+@DI.autoinjectable(MyService, MyOtherService)
+class MyApplication {
     run() {
         console.log(this.myService.result());
     }
@@ -175,18 +176,6 @@ DI.resolve(MyApplication).run();
 ### Alternate Example - Explicit Constructor
 
 ```js
-// file: MyService.js
-import {injectable} from 'effortless-di';
-
-@injectable()
-export class MyService {
-    result() {
-        return 'Eureka!';
-    }
-}
-```
-
-```js
 // file MyApplication.js
 import {injectable}     from 'effortless-di';
 import {MyService}      from './MyService';
@@ -202,13 +191,4 @@ class MyApplication {
         console.log(this.myService.result());
     }
 }
-```
-
-```js
-// file index.js
-import {resolve}       from 'effortless-di';
-import {MyApplication} from './MyApplication';
-
-// prints 'Eureka!'
-resolve(MyApplication).run();
 ```
